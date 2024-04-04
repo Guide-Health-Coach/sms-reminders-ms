@@ -3,8 +3,10 @@ import boto3
 from datetime import datetime
 import http.client
 import requests
+import os
 
 def lambda_handler(event, context):
+    SLACK_WEBHOOK_URL = os.environ.get('SLACK_WEBHOOK_URL')
     dynamodb = boto3.resource('dynamodb')
     userTable = dynamodb.Table('User')
     
@@ -26,7 +28,7 @@ def lambda_handler(event, context):
             conn.close()
 
     def log_message_to_slack(message, error=False):
-        webhook_url = 'https://hooks.slack.com/services/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'
+        webhook_url = SLACK_WEBHOOK_URL
         if error:
             data = {
                 'text': f'*ERROR* : {message}',
